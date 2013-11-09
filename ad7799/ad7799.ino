@@ -169,6 +169,23 @@ void ad7799_init()
    ad7799_reset();
    ad7799_init_status = ad7799_status();
 }
+
+int ad7799_get_ID(){
+int id;
+//  CR7     CR6    CR5    CR4    CR3    CR2      CR1 CR0
+//  WEN(0) R/W(0) RS2(0) RS1(0) RS0(0) CREAD(0) 0(0) 0(0)
+//  RS2, RS1, RS0 = 1, 0, 0; Power-On/Reset = 0xX8 (AD7798)/0xX9 (AD7799)
+
+ //write 0b01100000
+  digitalWrite(10,LOW); //enable AD7799
+  SPI.transfer(0x60);  //ask for ID, 8 bits
+  id = SPI.transfer(0xff); // clock it in
+  id &= 0x0f;
+  digitalWrite(10,HIGH); //disable AD7799
+  
+  return id // (ID & 0xF == 0x9) ? 7799:7798;
+}
+
 void setup() {
   Serial.begin(9600);
   pinMode(10,OUTPUT);
@@ -177,33 +194,36 @@ void setup() {
   SPI.begin();
 
  Serial.println("Begin");
- digitalWrite(10,LOW);
- 
+ Serial.print("device:");Serial.println(ad7799_get_ID());
  uint8_t buff[32];
  
- ad7799_init();
- ad7799_calibrate();
- ad7799_set_mode(AD7799_SINGLE_CONVERSION_MODE,0,AD7799_4_17_HZ);
- ad7799_write_config(0,1,AD7799_1_GAIN,1,0,AD7799_AIN1_CHAN);
-// uint8_t burnout, uint8_t unipolar, uint8_t gain,uint8_t ref_det, uint8_t buf, uint8_t chan)
- digitalWrite(10,HIGH);
- 
-ad7799_request_data(0);
-ad7799_read_data();
+// ad7799_init();
+// ad7799_calibrate();
+// ad7799_set_mode(AD7799_SINGLE_CONVERSION_MODE,0,AD7799_4_17_HZ);
+// ad7799_write_config(0,1,AD7799_1_GAIN,1,0,AD7799_AIN1_CHAN);
+//// uint8_t burnout, uint8_t unipolar, uint8_t gain,uint8_t ref_det, uint8_t buf, uint8_t chan)
+// digitalWrite(10,HIGH);
+// 
+//ad7799_request_data(0);
+//ad7799_read_data();
+int ID;
 
- 
- 
+//  RS2, RS1, RS0 = 1, 0, 0; Power-On/Reset = 0xX8 (AD7798)/0xX9 (AD7799)
+
+   
+
+
 }
 
 void loop() {
-  int data;
-  
-  digitalWrite(10,LOW);
-  ad7799_request_data(0);
-  delay(100);
-  data=ad7799_read_data();
-  digitalWrite(10,HIGH);
-  Serial.println(data);
-  delay(1000);
+//  long data;
+//  
+//  digitalWrite(10,LOW);
+//  ad7799_request_data(0);
+//  delay(100);
+//  data=ad7799_read_data();
+//  digitalWrite(10,HIGH);
+//  Serial.println(data);
+//  delay(1000);
 }
 
