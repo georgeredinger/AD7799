@@ -3,7 +3,6 @@
  Arduino Uno
  */
 
-// the sensor communicates using SPI, so include the library:
 #include <SPI.h>
 
 #define AD7799_STATUS_RDY       0x80
@@ -24,6 +23,7 @@ uint8_t ad7799_init_status;
 #define AD7799_SCALE_REG  0x7
 
 
+#define CS 10
 
 
 void ad7799_reset(void)
@@ -177,25 +177,59 @@ int id;
 //  RS2, RS1, RS0 = 1, 0, 0; Power-On/Reset = 0xX8 (AD7798)/0xX9 (AD7799)
 
  //write 0b01100000
-  digitalWrite(10,LOW); //enable AD7799
+  digitalWrite(CS,LOW); //enable AD7799
   SPI.transfer(0x60);  //ask for ID, 8 bits
   id = SPI.transfer(0xff); // clock it in
   id &= 0x0f;
-  digitalWrite(10,HIGH); //disable AD7799
+  digitalWrite(CS,HIGH); //disable AD7799
+    return 7790+id;
+}
+unsigned int ad7799_read_mode() {
+  unsigned int mode;
   
-  return id // (ID & 0xF == 0x9) ? 7799:7798;
+  digitalWrite(CS,LOW); //enable AD7799
+  //SPI.transfer(0xff);
+  //SPI.transfer(0xff);
+  //SPI.transfer(0xff);
+  //SPI.transfer(0xff);
+  delay(100);
+  SPI.transfer(0x48);  //ask for ID, 8 bits
+  mode = (SPI.transfer(0xff) << 8)  | SPI.transfer(0xff); // clock it in
+  digitalWrite(CS,HIGH); //disable AD7799
+  
+  return mode;
 }
 
+unsigned int ad7799_write_mode() {
+  unsigned int mode;
+  
+  digitalWrite(CS,LOW); //enable AD7799
+  SPI.transfer(0xff);
+  SPI.transfer(0xff);
+  SPI.transfer(0xff);
+  SPI.transfer(0xff);
+  delay(100);
+  SPI.transfer(0x48);  //ask for ID, 8 bits
+  mode = (SPI.transfer(0xff) << 8)  | SPI.transfer(0xff); // clock it in
+  digitalWrite(CS,HIGH); //disable AD7799
+  
+  return mode;
+}
 void setup() {
   Serial.begin(9600);
   pinMode(10,OUTPUT);
   // start the SPI library:
-  SPI.setClockDivider(SPI_CLOCK_DIV64);
+  SPI.setClockDivider(SPI_CLOCK_DIV32);
   SPI.begin();
 
  Serial.println("Begin");
  Serial.print("device:");Serial.println(ad7799_get_ID());
- uint8_t buff[32];
+ Serial.print("mode:");Serial.println(ad7799_read_mode(),HEX);//mode after reset is 0x0A
+
+//ad7799_set_channel();
+//ad7799_set_gain();
+//ad7799_read_input();
+
  
 // ad7799_init();
 // ad7799_calibrate();
@@ -206,11 +240,6 @@ void setup() {
 // 
 //ad7799_request_data(0);
 //ad7799_read_data();
-int ID;
-
-//  RS2, RS1, RS0 = 1, 0, 0; Power-On/Reset = 0xX8 (AD7798)/0xX9 (AD7799)
-
-   
 
 
 }
