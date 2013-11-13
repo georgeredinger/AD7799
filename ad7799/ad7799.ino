@@ -203,12 +203,9 @@ unsigned int ad7799_read_mode() {
 unsigned int ad7799_write_mode() {
   unsigned int mode;
   
+  
   digitalWrite(CS,LOW); //enable AD7799
-  SPI.transfer(0xff);
-  SPI.transfer(0xff);
-  SPI.transfer(0xff);
-  SPI.transfer(0xff);
-  delay(100);
+  
   SPI.transfer(0x48);  //ask for ID, 8 bits
   mode = (SPI.transfer(0xff) << 8)  | SPI.transfer(0xff); // clock it in
   digitalWrite(CS,HIGH); //disable AD7799
