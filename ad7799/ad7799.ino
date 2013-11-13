@@ -3,7 +3,6 @@
  Arduino Uno
  */
 
-// the sensor communicates using SPI, so include the library:
 #include <SPI.h>
 
 #define AD7799_STATUS_RDY       0x80
@@ -24,6 +23,7 @@ uint8_t ad7799_init_status;
 #define AD7799_SCALE_REG  0x7
 
 
+#define CS 10
 
 
 void ad7799_reset(void)
@@ -169,41 +169,90 @@ void ad7799_init()
    ad7799_reset();
    ad7799_init_status = ad7799_status();
 }
+
+int ad7799_get_ID(){
+int id;
+//  CR7     CR6    CR5    CR4    CR3    CR2      CR1 CR0
+//  WEN(0) R/W(0) RS2(0) RS1(0) RS0(0) CREAD(0) 0(0) 0(0)
+//  RS2, RS1, RS0 = 1, 0, 0; Power-On/Reset = 0xX8 (AD7798)/0xX9 (AD7799)
+
+ //write 0b01100000
+  digitalWrite(CS,LOW); //enable AD7799
+  SPI.transfer(0x60);  //ask for ID, 8 bits
+  id = SPI.transfer(0xff); // clock it in
+  id &= 0x0f;
+  digitalWrite(CS,HIGH); //disable AD7799
+    return 7790+id;
+}
+unsigned int ad7799_read_mode() {
+  unsigned int mode;
+  
+  digitalWrite(CS,LOW); //enable AD7799
+  //SPI.transfer(0xff);
+  //SPI.transfer(0xff);
+  //SPI.transfer(0xff);
+  //SPI.transfer(0xff);
+  delay(100);
+  SPI.transfer(0x48);  //ask for ID, 8 bits
+  mode = (SPI.transfer(0xff) << 8)  | SPI.transfer(0xff); // clock it in
+  digitalWrite(CS,HIGH); //disable AD7799
+  
+  return mode;
+}
+
+unsigned int ad7799_write_mode() {
+  unsigned int mode;
+  
+  digitalWrite(CS,LOW); //enable AD7799
+  SPI.transfer(0xff);
+  SPI.transfer(0xff);
+  SPI.transfer(0xff);
+  SPI.transfer(0xff);
+  delay(100);
+  SPI.transfer(0x48);  //ask for ID, 8 bits
+  mode = (SPI.transfer(0xff) << 8)  | SPI.transfer(0xff); // clock it in
+  digitalWrite(CS,HIGH); //disable AD7799
+  
+  return mode;
+}
 void setup() {
   Serial.begin(9600);
   pinMode(10,OUTPUT);
   // start the SPI library:
-  SPI.setClockDivider(SPI_CLOCK_DIV64);
+  SPI.setClockDivider(SPI_CLOCK_DIV32);
   SPI.begin();
 
  Serial.println("Begin");
- digitalWrite(10,LOW);
- 
- uint8_t buff[32];
- 
- ad7799_init();
- ad7799_calibrate();
- ad7799_set_mode(AD7799_SINGLE_CONVERSION_MODE,0,AD7799_4_17_HZ);
- ad7799_write_config(0,1,AD7799_1_GAIN,1,0,AD7799_AIN1_CHAN);
-// uint8_t burnout, uint8_t unipolar, uint8_t gain,uint8_t ref_det, uint8_t buf, uint8_t chan)
- digitalWrite(10,HIGH);
- 
-ad7799_request_data(0);
-ad7799_read_data();
+ Serial.print("device:");Serial.println(ad7799_get_ID());
+ Serial.print("mode:");Serial.println(ad7799_read_mode(),HEX);//mode after reset is 0x0A
+
+//ad7799_set_channel();
+//ad7799_set_gain();
+//ad7799_read_input();
 
  
- 
+// ad7799_init();
+// ad7799_calibrate();
+// ad7799_set_mode(AD7799_SINGLE_CONVERSION_MODE,0,AD7799_4_17_HZ);
+// ad7799_write_config(0,1,AD7799_1_GAIN,1,0,AD7799_AIN1_CHAN);
+//// uint8_t burnout, uint8_t unipolar, uint8_t gain,uint8_t ref_det, uint8_t buf, uint8_t chan)
+// digitalWrite(10,HIGH);
+// 
+//ad7799_request_data(0);
+//ad7799_read_data();
+
+
 }
 
 void loop() {
-  int data;
-  
-  digitalWrite(10,LOW);
-  ad7799_request_data(0);
-  delay(100);
-  data=ad7799_read_data();
-  digitalWrite(10,HIGH);
-  Serial.println(data);
-  delay(1000);
+//  long data;
+//  
+//  digitalWrite(10,LOW);
+//  ad7799_request_data(0);
+//  delay(100);
+//  data=ad7799_read_data();
+//  digitalWrite(10,HIGH);
+//  Serial.println(data);
+//  delay(1000);
 }
 
