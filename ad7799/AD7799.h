@@ -133,12 +133,9 @@ unsigned char AD7799_Init(void);
 /* Sends 32 consecutive 1's on SPI in order to reset the part. */
 void AD7799_Reset(void);
 /* Reads the value of the selected register. */
-unsigned long AD7799_GetRegisterValue(unsigned char regAddress, 
-									  unsigned char size);
+unsigned long AD7799_GetRegisterValue(unsigned char regAddress, unsigned char size);
 /* Writes a value to the register. */
-void AD7799_SetRegisterValue(unsigned char regAddress,
-							 unsigned long regValue, 
-							 unsigned char size);
+void AD7799_SetRegisterValue(unsigned char regAddress, unsigned long regValue,  unsigned char size);
 /* Sets the operating mode of AD7799. */
 void AD7799_SetMode(unsigned long mode);
 /* Reads /RDY bit of Status register. */
