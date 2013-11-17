@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date Sat 16 Nov 2013 05:35:54 AM PST
+EESchema Schematic File Version 2
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -29,52 +29,31 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-EELAYER 43  0
+LIBS:ad77xx
+LIBS:AD7799-cache
+EELAYER 24 0
 EELAYER END
-$Descr A4 11700 8267
+$Descr User 11000 8500
 encoding utf-8
 Sheet 1 1
-Title ""
+Title "AD7799 analog frontend"
 Date "16 nov 2013"
-Rev ""
+Rev "0.1"
 Comp ""
-Comment1 ""
+Comment1 "Minimal circuit"
 Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-Text Notes 4900 3350 0    60   ~ 0
-AD7799\n
-Wire Wire Line
-	4050 4350 4050 4250
-Wire Wire Line
-	4050 4250 4450 4250
-Wire Notes Line
-	5650 2600 4450 2600
-Wire Notes Line
-	5650 2600 5650 4350
-Wire Notes Line
-	5650 4350 4450 4350
-Wire Notes Line
-	4450 4350 4450 2600
-Wire Wire Line
-	5650 2700 5750 2700
 $Comp
-L GND #PWR?
-U 1 1 52877102
-P 4050 4350
-F 0 "#PWR?" H 4050 4350 30  0001 C CNN
-F 1 "GND" H 4050 4280 30  0001 C CNN
-	1    4050 4350
-	1    0    0    -1  
-$EndComp
-$Comp
-L +3.3VP #PWR?
-U 1 1 52876FDE
-P 5750 2700
-F 0 "#PWR?" H 5800 2730 20  0001 C CNN
-F 1 "+3.3VP" H 5800 2800 30  0000 C CNN
-	1    5750 2700
+L AD7799 U?
+U 1 1 5289229C
+P 4700 5500
+F 0 "U?" H 4700 5500 60  0000 C CNN
+F 1 "AD7799" H 4700 5500 60  0000 C CNN
+F 2 "" H 4700 5500 60  0000 C CNN
+F 3 "" H 4700 5500 60  0000 C CNN
+	1    4700 5500
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
