@@ -29,10 +29,11 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
+LIBS:ad77xx
 LIBS:AD7799-cache
 EELAYER 24 0
 EELAYER END
-$Descr User 11000 8500
+$Descr USLetter 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "AD7799 analog frontend"
@@ -44,4 +45,15 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
+$Comp
+L AD7799 U?
+U 1 1 5289229C
+P 4700 5500
+F 0 "U?" H 4700 5500 60  0000 C CNN
+F 1 "AD7799" H 4700 5500 60  0000 C CNN
+F 2 "" H 4700 5500 60  0000 C CNN
+F 3 "" H 4700 5500 60  0000 C CNN
+	1    4700 5500
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
